@@ -1,0 +1,9 @@
+.aaa{
+  position: absolute;
+  width:5px;
+  height:5px;
+  background-color:#f66;
+  display:inline-block;
+  float:left;
+  margin:2px;
+}
