@@ -94,7 +94,7 @@ function update() {
     var allPosition = getAllPosition();
 
     // add some rotation to the system
-    particleSystem.rotation.y += 0.01;
+    particleSystem.rotation.y += 0.05;
 
     var pCount = particleCount;
     while (pCount--) {
@@ -132,8 +132,8 @@ function update() {
 function getAllPosition() {
     var all = [];
     for (var i=0; i<1800; i++) {
-        var b = Math.random()*200;
-        var a = Math.random()*(200-b)+(100-(200-b)/2);
+        var a = Math.random()*200-100;
+        var b = getYbyX(a);
         var c = 0;
         all.push([a, b, c]);
     }

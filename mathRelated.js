@@ -1,4 +1,4 @@
-function getNumberInNormalDistribution(mean,std_dev){
+function getNumberInNormalDistribution(mean, std_dev){
     return mean+(randomNormalDistribution()*std_dev);
 }
 
@@ -18,17 +18,13 @@ function randomNormalDistribution(){
     return u*c;
 }
 
-var b = {};
-for (var i=0; i<1000000; i++) {
-  var a = getNumberInNormalDistribution(180, 1).toFixed(2);
-  if (b.hasOwnProperty(a)) {
-    b[a]++;
+function getYbyX(x) {
+  // x^2 + y^2 = 10000
+  var rs = Math.sqrt(10000-Math.pow(x, 2));
+  if (Math.random()*2 > 1) {
+    return rs;
   }
   else {
-    b[a] = 1;
+    return -rs;
   }
-}
-
-for (var key in b) {
-  console.log('b[' + key + '] = ' + b[key]);
 }
