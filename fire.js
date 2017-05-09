@@ -49,11 +49,9 @@ var particleCount = 1800,
     pMaterial = new THREE.ParticleBasicMaterial({
         color: 0xFFFFFF,
         size: 20,
-        /*
         map: THREE.ImageUtils.loadTexture(
             "partical.png"
         ),
-        */
         blending: THREE.AdditiveBlending,
         transparent: true
     });
@@ -131,10 +129,10 @@ function update() {
 
 function getAllPosition() {
     var all = [];
-    for (var i=0; i<1800; i++) {
+    for (var i=0; i<particleCount; i++) {
         var a = Math.random()*200-100;
-        var b = getYbyX(a);
-        var c = 0;
+        var b = Math.random()*200-100;
+        var c = getBall(a, b);
         all.push([a, b, c]);
     }
     return all;

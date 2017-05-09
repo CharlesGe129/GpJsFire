@@ -19,8 +19,21 @@ function randomNormalDistribution(){
 }
 
 function getYbyX(x) {
-  // x^2 + y^2 = 10000
-  var rs = Math.sqrt(10000-Math.pow(x, 2));
+  // (x-20)^2+y^2=100
+  // z = 0
+  var rs = Math.sqrt(1000-Math.pow(x-10, 2));
+  if (Math.random()*2 > 1) {
+    return rs;
+  }
+  else {
+    return -rs;
+  }
+}
+
+function getBall(x, y) {
+  // x^2+y^2+z^2=10000
+  // z = 0
+  var rs = Math.sqrt(10000-Math.pow(x-50, 2)-Math.pow(y, 2));
   if (Math.random()*2 > 1) {
     return rs;
   }
