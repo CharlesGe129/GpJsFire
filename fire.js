@@ -1,4 +1,7 @@
 // @see http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+var accelorate = 9.8/1000*15/10;
+var deltaTime = 15;
+
 window.requestAnimFrame = (function() {
     return window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
@@ -44,7 +47,7 @@ renderer.setSize(WIDTH, HEIGHT);
 $container.append(renderer.domElement);
 
 // create the particle variables
-var particleCount = 1800,
+var particleCount = 2800,
     particles = new THREE.Geometry(),
     pMaterial = new THREE.ParticleBasicMaterial({
         color: 0xFFFFFF,
@@ -70,7 +73,7 @@ for (var p = 0; p < particleCount; p++) {
     // create a velocity vector
     particle.velocity = new THREE.Vector3(
         0, // x
-        -Math.random(), // y
+        -10, // y
         0); // z
 
     // add it to the geometry
@@ -88,32 +91,34 @@ particleSystem.sortParticles = true;
 scene.addChild(particleSystem);
 
 // animation loop
+
 function update() {
     var allPosition = getAllPosition();
 
     // add some rotation to the system
-    particleSystem.rotation.y += 0.05;
+    //particleSystem.rotation.y += 0.05;
 
     var pCount = particleCount;
     while (pCount--) {
         // get the particle
         var particle = particles.vertices[pCount];
 
+        //console.log(particle.position);
         // check if we need to reset
         if (particle.position.y < -200) {
             particle.position.y = 200;
-            particle.velocity.y = 0;
+            particle.velocity.y = -10;
         }
 
         // update the velocity
-        particle.velocity.y -= Math.random() * .1;
+        particle.velocity.y -= accelorate*deltaTime;
 
         // and the position
         particle.position.addSelf(
             particle.velocity);
-        particle.position.x = allPosition[pCount][0];
+        /*particle.position.x = allPosition[pCount][0];
         particle.position.y = allPosition[pCount][1];
-        particle.position.z = allPosition[pCount][2];
+        particle.position.z = allPosition[pCount][2];*/
     }
 
     // flag to the particle system that we've
@@ -132,7 +137,7 @@ function getAllPosition() {
     for (var i=0; i<particleCount; i++) {
         var a = Math.random()*200-100;
         var b = Math.random()*200-100;
-        var c = getBall(a, b);
+        var c = getYbyX(b);
         all.push([a, b, c]);
     }
     return all;
