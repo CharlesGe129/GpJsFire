@@ -1,6 +1,5 @@
 // @see http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-var accelorate = 9.8/1000*15/10;
-var deltaTime = 15;
+var accelorate = 0.5;
 
 window.requestAnimFrame = (function() {
     return window.requestAnimationFrame ||
@@ -47,7 +46,7 @@ renderer.setSize(WIDTH, HEIGHT);
 $container.append(renderer.domElement);
 
 // create the particle variables
-var particleCount = 2800,
+var particleCount = 2500,
     particles = new THREE.Geometry(),
     pMaterial = new THREE.ParticleBasicMaterial({
         color: 0xFFFFFF,
@@ -60,12 +59,32 @@ var particleCount = 2800,
     });
 
 // now create the individual particles
-for (var p = 0; p < particleCount; p++) {
+for (var p = 0; p < 1800; p++) {
 
     // create a particle with random
     // position values, -250 -> 250
-    var pX = Math.random() * 500 - 250,
-        pY = Math.random() * 500 - 250,
+    var pX = getNumberInNormalDistribution(0, 70),
+        pY = getNumberInNormalDistribution(0, 5),
+        pZ = Math.random() * 500 - 250,
+        particle = new THREE.Vertex(
+            new THREE.Vector3(pX, pY, -250)
+        );
+    // create a velocity vector
+    particle.velocity = new THREE.Vector3(
+        0, // x
+        0, // y
+        0); // z
+
+    // add it to the geometry
+    particles.vertices.push(particle);
+}
+// now create the individual particles
+for (var p = 1800; p < particleCount; p++) {
+
+    // create a particle with random
+    // position values, -250 -> 250
+    var pX = getNumberInNormalDistribution(0, 70),
+        pY = getNumberInNormalDistribution(0, 5),
         pZ = Math.random() * 500 - 250,
         particle = new THREE.Vertex(
             new THREE.Vector3(pX, pY, pZ)
@@ -73,7 +92,7 @@ for (var p = 0; p < particleCount; p++) {
     // create a velocity vector
     particle.velocity = new THREE.Vector3(
         0, // x
-        -10, // y
+        0, // y
         0); // z
 
     // add it to the geometry
@@ -93,32 +112,40 @@ scene.addChild(particleSystem);
 // animation loop
 
 function update() {
-    var allPosition = getAllPosition();
+    //var allPosition = getAllPosition();
 
     // add some rotation to the system
-    //particleSystem.rotation.y += 0.05;
+    //particleSystem.rotation.y += 0.02;
 
     var pCount = particleCount;
     while (pCount--) {
         // get the particle
         var particle = particles.vertices[pCount];
 
-        //console.log(particle.position);
         // check if we need to reset
-        if (particle.position.y < -200) {
-            particle.position.y = 200;
-            particle.velocity.y = -10;
-        }
 
         // update the velocity
-        particle.velocity.y -= accelorate*deltaTime;
+        if (pCount >= 1800) {
+            vx = Math.random() * .02 - 0.01;
+            vy = Math.random() * .02 - 0.01;
+            vz = Math.random() * .01;
+            particle.velocity.x = (particle.position.x > 0 ? particle.velocity.x+vx : particle.velocity.x-vx);
+            particle.velocity.y = (particle.position.y > 0 ? particle.velocity.y+vy : particle.velocity.y-vy);
+            particle.velocity.z += vz;
+
+            if (particle.position.z > 250) {
+                particle.position.x = getNumberInNormalDistribution(0, 70);
+                particle.position.y = getNumberInNormalDistribution(0, 5);
+                particle.position.z = -250;
+                particle.velocity.x = 0;
+                particle.velocity.y = 0;
+                particle.velocity.z = 0;
+            }
+        }
 
         // and the position
         particle.position.addSelf(
             particle.velocity);
-        /*particle.position.x = allPosition[pCount][0];
-        particle.position.y = allPosition[pCount][1];
-        particle.position.z = allPosition[pCount][2];*/
     }
 
     // flag to the particle system that we've
